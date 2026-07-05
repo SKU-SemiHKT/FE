@@ -17,7 +17,7 @@ export default function RootLayout(){
 const AppLayout = styled.div`
     width: 100%;
     max-width: 390px;
-    min-height: 844dvh;
+    min-height: 100dvh;
     margin: 0 auto;
     padding : 30px;
 
