@@ -4,10 +4,6 @@ export default function Shop(){
     return(
         <>
         <Text>shop</Text>
-        <Text>바보</Text>
-        <Text>바보</Text>
-        <Text>바보</Text>
-        <Text>바보</Text>
         </>
     )
 }
