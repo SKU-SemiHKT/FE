@@ -9,7 +9,7 @@ export default function Footer(){
 
     const menuItems = [
         { path: "/", label: "홈" , icon: MdHomeFilled, },
-        { path: "/Betting", label: "베팅", icon: RiCoinsFill , },
+        { path: "/BettingMain", label: "베팅", icon: RiCoinsFill , },
         { path: "/Shop", label: "구매샵" , icon: MdOutlineShoppingBag },
     ];
 

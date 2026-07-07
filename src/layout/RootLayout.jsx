@@ -1,5 +1,4 @@
 import {Outlet} from "react-router-dom"
-import Header from "../components/header/Header"
 import BottomNavigation from "../components/common/BottomNavigation"
 import styled from "styled-components"
 
