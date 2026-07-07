@@ -1,46 +1,67 @@
-import {Outlet} from "react-router-dom"
-import BottomNavigation from "../components/common/BottomNavigation"
-import styled from "styled-components"
+import { Outlet, useLocation } from "react-router-dom";
+import BottomNavigation from "../components/common/BottomNavigation";
+import styled from "styled-components";
 
-export default function RootLayout(){
-    return(
-        <AppLayout>
-            <main className="app-content">
-                <Outlet />
-            </main>
-            <BottomNavigation />
-        </AppLayout>
-    );
+export default function RootLayout() {
+  const location = useLocation();
+
+  const hiddenNavigationPaths = [
+    "/MissionPhotoUpload",
+    "/BettingHistory",
+  ];
+
+  const shouldHideBottomNavigation =
+    hiddenNavigationPaths.includes(location.pathname);
+
+  return (
+    <AppLayout>
+      <main
+        className={`app-content ${
+          shouldHideBottomNavigation ? "full-page" : ""
+        }`}
+      >
+        <Outlet />
+      </main>
+
+      {!shouldHideBottomNavigation && <BottomNavigation />}
+    </AppLayout>
+  );
 }
+
 const AppLayout = styled.div`
+  width: 100%;
+  max-width: 390px;
+  height: 100dvh;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+  overflow: hidden;
+
+  background-color: #ffffff;
+
+  .app-content {
     width: 100%;
-    max-width: 390px;
-    height: 100dvh;
-    margin: 0 auto;
-    padding : 30px;
+    height: 100%;
 
-    display: flex;
-    flex-direction: column;
+    padding: 30px;
+    padding-bottom: 120px;
 
-    position: relative;
-    background-color: #ffffff;
+    box-sizing: border-box;
 
-    .app-content {
-        width: 100%;
-        height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 
-        padding-bottom: 120px;
+    scrollbar-width: none;
 
-        box-sizing: border-box;
-
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        /* 스크롤은 되지만 스크롤바는 숨김 */
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-        display: none;
-        }
+    &::-webkit-scrollbar {
+      display: none;
     }
+  }
+
+  .app-content.full-page {
+    padding-bottom: 30px;
+  }
 `;
