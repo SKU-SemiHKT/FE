@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import pointImage from "../../assets/point_Image.svg";
+import { getGroupDetail, getUserInfo } from "../../api/groupApi";
+
 
 const DetailContainer = styled.div`
   width: 100%;
@@ -100,7 +102,7 @@ const DateItem = styled.div`
     height: 20px;
 
     ${(props) =>
-      props.active &&
+      props.$active &&
       `
       background-color: #A1ED9D;
       color: #ffffff;
@@ -125,7 +127,7 @@ const DateItem = styled.div`
     align-items: center;
 
     ${(props) =>
-      props.active &&
+      props.$active &&
       `
       background-color: #A1ED9D;
       color: #ffffff;
@@ -191,7 +193,7 @@ const DetailItem = styled.div`
   }
 `;
 
-export default function Mission({ onBack }) {
+export default function Mission({ onBack, groupId, userId }) {
   const days = [
     { day: "월", num: "28", active: false },
     { day: "화", num: "29", active: false },
@@ -202,21 +204,54 @@ export default function Mission({ onBack }) {
     { day: "일", num: "4", active: false },
   ];
 
+  const [groupDetail, setGroupDetail] = useState(null);
+  const [userPoint, setUserPoint] = useState(null);
+
+  useEffect(() => {
+    async function fetchDetail() {
+      try {
+        const result = await getGroupDetail(groupId);
+        console.log("받아온 그룹 상세 정보:", result);
+        setGroupDetail(result.data);
+      } catch (error) {
+        console.error("그룹 상세 정보 불러오기 실패:", error);
+      }
+    }
+    if (groupId) fetchDetail();
+  }, [groupId]);
+
+  useEffect(() => {
+    async function fetchUserInfo() {
+      try {
+        const result = await getUserInfo(userId);
+        console.log("받아온 유저 정보:", result);
+        setUserPoint(result.data.points);
+      } catch (error) {
+        console.error("유저 정보 불러오기 실패:", error);
+      }
+    }
+    if (userId) fetchUserInfo();
+  }, [userId]);
+
+  if (!groupDetail) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <DetailContainer>
       <TopNav>
         <BackBtn onClick={onBack}>&lt;</BackBtn>
-        <Title>어제의 나는 죽었다</Title>
+        <Title>{groupDetail.name}</Title>
         <PointBox>
-            <img src={pointImage} alt="Point" />
-            1890
+          <img src={pointImage} alt="Point" />
+          {userPoint ?? "-"}
         </PointBox>
       </TopNav>
 
       <SectionTitle>일정</SectionTitle>
       <DateList>
         {days.map((day, index) => (
-          <DateItem key={index} active={day.active}>
+          <DateItem key={index} $active={day.active}>
             <span className="day">{day.day}</span>
             <span className="num">{day.num}</span>
           </DateItem>
