@@ -1,16 +1,15 @@
 import {Outlet} from "react-router-dom"
 import Header from "../components/header/Header"
-import Footer from "../components/footer/Footer"
+import BottomNavigation from "../components/common/BottomNavigation"
 import styled from "styled-components"
 
 export default function RootLayout(){
     return(
         <AppLayout>
-            <Header />
             <main className="app-content">
                 <Outlet />
             </main>
-            <Footer />
+            <BottomNavigation />
         </AppLayout>
     );
 }
