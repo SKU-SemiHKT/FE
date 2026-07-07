@@ -1,44 +1,156 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
+
 import PointBadge from "../../components/common/PointBadge";
+import BettingPointSelector from "../../components/betting/BettingPointSelector";
+import BettingResultSelector from "../../components/betting/BettingResultSelector";
+import BettingConfirmModal from "../../components/betting/BettingConfirmModal";
+
+import { mockBettings } from "../../data/BettingData";
 
 export default function BettingDetail() {
-  const navigate = useNavigate();
   const { bettingId } = useParams();
+
+  const betting = mockBettings.find(
+    (item) => item.id === Number(bettingId)
+  );
+
+  const [selectedPoint, setSelectedPoint] = useState(100);
+  const [selectedOptionId, setSelectedOptionId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 존재하지 않는 베팅 ID 처리
+  if (!betting) {
+    return (
+      <NotFoundMessage>
+        존재하지 않는 베팅입니다.
+      </NotFoundMessage>
+    );
+  }
+
+  // 현재 선택한 성공/실패 옵션
+  const selectedOption = betting.options.find(
+    (option) => option.id === selectedOptionId
+  );
+
+  // 결과 선택 버튼 클릭
+  const handleOpenModal = () => {
+    if (!selectedPoint) {
+      alert("베팅할 포인트를 선택해주세요.");
+      return;
+    }
+
+    if (selectedPoint < betting.minimumPoint) {
+      alert(
+        `최소 ${betting.minimumPoint}포인트부터 베팅할 수 있습니다.`
+      );
+      return;
+    }
+
+    if (selectedPoint > betting.maximumPoint) {
+      alert(
+        `최대 ${betting.maximumPoint}포인트까지 베팅할 수 있습니다.`
+      );
+      return;
+    }
+
+    if (!selectedOptionId) {
+      alert("성공 또는 실패를 선택해주세요.");
+      return;
+    }
+
+    setIsModalOpen(true);
+  };
+
+  // 모달에서 '베팅할게요' 클릭
+  const handleConfirmBetting = () => {
+    if (!selectedOption) {
+      alert("선택한 결과가 없습니다.");
+      return;
+    }
+
+    console.log("최종 베팅 정보:", {
+      bettingId: betting.id,
+      optionId: selectedOptionId,
+      optionLabel: selectedOption.label,
+      point: selectedPoint,
+    });
+
+    alert(
+      `${selectedOption.label}에 ${selectedPoint}포인트를 베팅했습니다.`
+    );
+
+    setIsModalOpen(false);
+  };
 
   return (
     <PageContainer>
-        <RoomNameBox>
-            <RoomName>어제의 나는 죽었다</RoomName>
-        </RoomNameBox>
-        <PointWrapper>
-            <PointBadge point={1890} />
-        </PointWrapper>
+      <RoomNameBox>
+        <RoomName>어제의 나는 죽었다</RoomName>
+      </RoomNameBox>
+
+      <PointWrapper>
+        <PointBadge point={betting.pointBalance} />
+      </PointWrapper>
+
+      <MissionOwner>
+        <strong>{betting.ownerName}님</strong>의 미션
+      </MissionOwner>
+
+      <BettingPointSelector
+        minimumPoint={betting.minimumPoint}
+        maximumPoint={betting.maximumPoint}
+        value={selectedPoint}
+        onChange={setSelectedPoint}
+      />
+
+      <BettingResultSelector
+        question={betting.detailQuestion}
+        remainingTimeText={betting.remainingTimeText}
+        options={betting.options}
+        selectedOptionId={selectedOptionId}
+        onSelectOption={setSelectedOptionId}
+        onSubmit={handleOpenModal}
+      />
+
+      <BettingConfirmModal
+        isOpen={isModalOpen}
+        optionLabel={selectedOption?.label ?? ""}
+        point={selectedPoint}
+        onConfirm={handleConfirmBetting}
+        onClose={() => setIsModalOpen(false)}
+      />
     </PageContainer>
   );
 }
 
 const PageContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-sizing: border-box;
 `;
+
 const RoomNameBox = styled.div`
-    width: fit-content;
-    height: auto;
-    margin: 0 auto;
+  width: fit-content;
+  margin: 0 auto;
 
-    padding: 5px 10px;
+  padding: 5px 10px;
 
-    background-color: #e1baba;
-    border-radius: 999px;
+  background-color: #e1baba;
+  border-radius: 999px;
 `;
+
 const RoomName = styled.h1`
-    margin: 0 auto;
-    font-size: 20px;
-    font-weight: 500;
-    text-align: center;
-    white-space: nowrap;
+  margin: 0;
+
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
 `;
 
 const PointWrapper = styled.div`
@@ -49,4 +161,25 @@ const PointWrapper = styled.div`
   justify-content: flex-end;
 
   margin: 0 auto;
+`;
+
+const MissionOwner = styled.h2`
+  width: 350px;
+  max-width: 100%;
+
+  margin: 4px auto 10px;
+
+  font-size: 21px;
+  font-weight: 400;
+
+  strong {
+    font-weight: 700;
+  }
+`;
+
+const NotFoundMessage = styled.div`
+  padding: 100px 20px;
+
+  color: #777777;
+  text-align: center;
 `;

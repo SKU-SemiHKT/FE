@@ -63,7 +63,7 @@ export default function BettingCard({
             type="button"
             onClick={() => onJoin?.(betting.id)}
           >
-            지금 참여하기
+          지금 참여하기
           </JoinButton>
         )}
       </ButtonArea>
