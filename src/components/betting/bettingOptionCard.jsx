@@ -4,38 +4,118 @@ import { LuUserRound } from "react-icons/lu";
 export default function BettingOptionCard({
   option,
   selected = false,
+  selectable = false,
+  hideStats = false,
+  onSelect,
 }) {
+  const handleClick = () => {
+    if (!selectable) return;
+
+    onSelect?.(option.id);
+  };
+
   return (
-    <OptionContainer $selected={selected}>
-      <OptionLeft>
-        <OptionLabel>{option.label}</OptionLabel>
+    <OptionRow>
+      {selectable && (
+        <RadioButton
+          type="button"
+          onClick={handleClick}
+          aria-label={`${option.label} 선택`}
+        >
+          <RadioCircle $selected={selected}>
+            {selected && <RadioInner />}
+          </RadioCircle>
+        </RadioButton>
+      )}
 
-        <ProgressTrack>
-          <ProgressBar $percentage={option.percentage} />
-        </ProgressTrack>
+      <OptionContainer
+        type={selectable ? "button" : undefined}
+        as={selectable ? "button" : "div"}
+        $selected={selected}
+        $selectable={selectable}
+        onClick={handleClick}
+      >
+        <OptionLeft>
+          <OptionLabel>{option.label}</OptionLabel>
 
-        <OptionInfo>
-          <ParticipantInfo>
-            <LuUserRound />
-            <span>{option.participantCount}명</span>
-          </ParticipantInfo>
+          <ProgressTrack>
+            <ProgressBar $percentage={option.percentage} />
+          </ProgressTrack>
 
-          <PointInfo>
-            <PointIcon>P</PointIcon>
-            <strong>{option.totalPoint}</strong>
-          </PointInfo>
-        </OptionInfo>
-      </OptionLeft>
+          <OptionInfo>
+            <ParticipantInfo>
+              <LuUserRound />
 
-      <Percentage>{option.percentage}%</Percentage>
-    </OptionContainer>
+              <span>
+                {hideStats
+                  ? "*명"
+                  : `${option.participantCount ?? 0}명`}
+              </span>
+            </ParticipantInfo>
+
+            <PointInfo>
+              <PointIcon>P</PointIcon>
+
+              <strong>
+                {hideStats
+                  ? "**"
+                  : option.totalPoint ?? 0}
+              </strong>
+            </PointInfo>
+          </OptionInfo>
+        </OptionLeft>
+
+        <Percentage>{option.percentage}%</Percentage>
+      </OptionContainer>
+    </OptionRow>
   );
 }
 
+const OptionRow = styled.div`
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const RadioButton = styled.button`
+  flex-shrink: 0;
+
+  padding: 0;
+  border: none;
+  background: none;
+
+  cursor: pointer;
+`;
+
+const RadioCircle = styled.span`
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid
+    ${({ $selected }) =>
+      $selected ? "#d2a8aa" : "#111111"};
+
+  border-radius: 50%;
+`;
+
+const RadioInner = styled.span`
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+  background-color: #d2a8aa;
+`;
+
 const OptionContainer = styled.div`
   width: 100%;
-  height: 64px;
-  padding: 8px 12px;
+  height: 72px;
+  padding: 10px 12px;
 
   display: flex;
   align-items: center;
@@ -50,7 +130,13 @@ const OptionContainer = styled.div`
       : "2px solid transparent"};
 
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: #f7f7f7;
+
+  color: #111111;
+  text-align: left;
+
+  cursor: ${({ $selectable }) =>
+    $selectable ? "pointer" : "default"};
 `;
 
 const OptionLeft = styled.div`
@@ -61,7 +147,7 @@ const OptionLeft = styled.div`
 const OptionLabel = styled.p`
   margin: 0;
 
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 `;
 
@@ -69,7 +155,7 @@ const ProgressTrack = styled.div`
   width: 100%;
   height: 3px;
 
-  margin-top: 6px;
+  margin-top: 7px;
 
   background-color: #d6d6d6;
   border-radius: 999px;
@@ -80,7 +166,7 @@ const ProgressBar = styled.div`
   width: ${({ $percentage }) => `${$percentage}%`};
   height: 100%;
 
-  background-color: #b58f91;
+  background-color: #d9a7aa;
   border-radius: inherit;
 `;
 
@@ -89,7 +175,7 @@ const OptionInfo = styled.div`
   align-items: center;
   gap: 6px;
 
-  margin-top: 3px;
+  margin-top: 4px;
 `;
 
 const ParticipantInfo = styled.div`
@@ -100,7 +186,7 @@ const ParticipantInfo = styled.div`
   font-size: 11px;
 
   svg {
-    font-size: 14px;
+    font-size: 15px;
   }
 `;
 
