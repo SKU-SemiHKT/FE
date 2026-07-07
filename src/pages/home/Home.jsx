@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import checkIcon from "../../assets/check_Icon.svg";
 import plusIcon from "../../assets/plus_Icon.svg"; 
 import Mission from "../mission/Mission.jsx";
+import { getMyGroups, getGroupDetail } from "../../api/groupApi";
 
 const HomeContainer = styled.div`
 `;
@@ -131,14 +133,13 @@ const AuthCard = styled.div`
 position: relative;
 border-radius: 23px;
 outline: 1px #A1ED9D solid;
-background-color: #B8ED9D;
 width: 352px;
 height: 200px;
 padding: 16px;
 display: flex;
 flex-direction: column;
 justify-content: space-between;
-background-color: ${({ isMe }) => (isMe ? "#B8ED9D;" : "#F5F5F5")};
+background-color: ${({ $isMe }) => ($isMe ? "#F2FFF2" : "#F5F5F5")};
 `;
 
 const CardHeader = styled.div`
@@ -204,18 +205,40 @@ font-weight: 500;
 `;
 
 export default function Home(){
+    const navigate = useNavigate();
     const[view, setView] = useState("home");
+    const [groupInfo, setGroupInfo] = useState(null);
+    const [groupDetail, setGroupDetail] = useState(null);
+
+     useEffect(() => {
+      async function fetchGroups() {
+        try {
+          const result = await getMyGroups(1);
+          console.log("받아온 그룹 정보:", result.data[0]);
+          setGroupInfo(result.data[0]);
+        } catch (error) {
+          console.error("그룹 불러오기 실패:", error);
+        }
+      }
+      fetchGroups();
+    }, []);
+
     if (view === "detail") {
-        return <Mission onBack={() => setView("home")} />;
+    return <Mission groupId={groupInfo.groupId} onBack={() => setView("home")} />;
     }
+
+    if (!groupInfo) {
+        return <div>Loading...</div>;
+    }
+    
     return(
         <HomeContainer>
             <FirstSection>
-                <span className="title">11월에 다같이 바프찍기</span>
-                <div className="right-Box">
-                <span className="subtitle">어제의 나는 죽었다</span>
-                <span className="member-count">멤버 4</span>
-                </div>
+                 <span className="title">{groupInfo.mainGoal}</span>
+                 <div className="right-Box">
+                 <span className="subtitle">{groupInfo.name}</span>
+                 <span className="member-count">멤버 {groupInfo.memberCount}</span>
+    </div>
             </FirstSection>
             <SecondSection>
                 <div className="mission-header">
@@ -244,7 +267,10 @@ export default function Home(){
                 </div>
             </SecondSection>
             <ThirdSection>
-             <AuthCard isMe={true}>
+             <AuthCard $isMe={true}
+             onClick={() => navigate("/MissionPhotoUpload")}
+             style={{ cursor: "pointer" }}
+             >
               <CardHeader>
                <div className="member-icon" />
                <span className="member-name">유저님</span>
@@ -258,7 +284,7 @@ export default function Home(){
               </TagContainer>
              </AuthCard>
 
-             <AuthCard isMe={false}>
+             <AuthCard $isMe={false}>
               <CardHeader>
                <div className="member-icon" />
                <span className="member-name">그룹원</span>
@@ -266,7 +292,7 @@ export default function Home(){
              <CardContent />
             </AuthCard>
 
-            <AuthCard isMe={false}>
+            <AuthCard $isMe={false}>
              <CardHeader>
               <div className="member-icon" />
               <span className="member-name">그룹원</span>
@@ -274,7 +300,7 @@ export default function Home(){
             <CardContent />
            </AuthCard>
 
-           <AuthCard isMe={false}>
+           <AuthCard $isMe={false}>
             <CardHeader>
              <div className="member-icon" />
              <span className="member-name">그룹원</span>
