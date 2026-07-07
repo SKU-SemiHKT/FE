@@ -147,10 +147,6 @@ export const mockAvailableBetting2 = {
   ],
 };
 
-/*
-  상세 페이지에서 URL의 bettingId로
-  해당 베팅 데이터를 찾기 위한 배열
-*/
 export const mockBettings = [
   mockMyBetting,
   mockAvailableBetting,

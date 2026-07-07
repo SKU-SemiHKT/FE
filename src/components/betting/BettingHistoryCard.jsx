@@ -53,7 +53,7 @@ const HistoryCard = styled.article`
 
   box-sizing: border-box;
   border-radius: 12px;
-  background-color: #f0e1e2;
+  background-color: #f3f3f3;
 `;
 
 const CardHeader = styled.div`
@@ -74,7 +74,7 @@ const OwnerText = styled.p`
 `;
 
 const PredictionLabel = styled.span`
-  color: #ffffff;
+  color: #a7a7a7;
 
   font-size: 13px;
   font-weight: 700;

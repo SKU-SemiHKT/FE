@@ -3,11 +3,14 @@ import styled from "styled-components";
 
 import PointBadge from "../../components/common/PointBadge";
 import BettingHistoryCard from "../../components/betting/BettingHistoryCard";
+import useUserInfo, { getUserPoint } from "../../hooks/useUserInfo";
 
 import { mockBettingHistory } from "../../data/BettingData";
 
 export default function BettingHistory() {
   const navigate = useNavigate();
+  const { userInfo } = useUserInfo();
+  const userPoint = getUserPoint(userInfo, 1890);
 
   return (
     <PageContainer>
@@ -25,7 +28,7 @@ export default function BettingHistory() {
       </TopBar>
 
       <PointWrapper>
-        <PointBadge point={1890} />
+        <PointBadge point={userPoint} />
       </PointWrapper>
 
       <HistoryList>

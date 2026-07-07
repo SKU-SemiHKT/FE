@@ -108,7 +108,7 @@ const RadioCircle = styled.span`
 
   border: 2px solid
     ${({ $selected }) =>
-      $selected ? "#d2a8aa" : "#111111"};
+      $selected ? "#79CA74" : "#111111"};
 
   border-radius: 50%;
 `;
@@ -118,7 +118,7 @@ const RadioInner = styled.span`
   height: 10px;
 
   border-radius: 50%;
-  background-color: #d2a8aa;
+  background-color: #79CA74;
 `;
 
 const OptionCardWrapper = styled.div`
@@ -135,8 +135,8 @@ const SubmitButton = styled.button`
   border: none;
   border-radius: 7px;
 
-  background-color: #d4a7a9;
-  color: #ffffff;
+  background-color: #A1ED9D;
+  color: #244f22;
 
   font-size: 15px;
   font-weight: 700;
@@ -144,7 +144,7 @@ const SubmitButton = styled.button`
   cursor: pointer;
 
   &:disabled {
-    background-color: #dfc5c6;
+    background-color: #d8f7d2;
     cursor: not-allowed;
   }
 `;

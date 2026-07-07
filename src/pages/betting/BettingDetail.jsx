@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import PointBadge from "../../components/common/PointBadge";
 import BettingPointSelector from "../../components/betting/BettingPointSelector";
 import BettingResultSelector from "../../components/betting/BettingResultSelector";
 import BettingConfirmModal from "../../components/betting/BettingConfirmModal";
+import useUserInfo, { getUserPoint } from "../../hooks/useUserInfo";
 
 import { mockBettings } from "../../data/BettingData";
 
 export default function BettingDetail() {
   const { bettingId } = useParams();
+  const navigate = useNavigate();
+  const { userInfo } = useUserInfo();
 
   const betting = mockBettings.find(
     (item) => item.id === Number(bettingId)
@@ -19,6 +22,7 @@ export default function BettingDetail() {
   const [selectedPoint, setSelectedPoint] = useState(100);
   const [selectedOptionId, setSelectedOptionId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const userPoint = getUserPoint(userInfo, betting?.pointBalance ?? 0);
 
   // 존재하지 않는 베팅 ID 처리
   if (!betting) {
@@ -86,12 +90,10 @@ export default function BettingDetail() {
 
   return (
     <PageContainer>
-      <RoomNameBox>
         <RoomName>어제의 나는 죽었다</RoomName>
-      </RoomNameBox>
 
       <PointWrapper>
-        <PointBadge point={betting.pointBalance} />
+        <PointBadge point={userPoint} />
       </PointWrapper>
 
       <MissionOwner>
@@ -114,6 +116,13 @@ export default function BettingDetail() {
         onSubmit={handleOpenModal}
       />
 
+      <HistoryButton
+        type="button"
+        onClick={() => navigate("/BettingHistory")}
+      >
+        배당 내역 확인
+      </HistoryButton>
+
       <BettingConfirmModal
         isOpen={isModalOpen}
         optionLabel={selectedOption?.label ?? ""}
@@ -132,16 +141,6 @@ const PageContainer = styled.div`
   flex-direction: column;
   gap: 18px;
   box-sizing: border-box;
-`;
-
-const RoomNameBox = styled.div`
-  width: fit-content;
-  margin: 0 auto;
-
-  padding: 5px 10px;
-
-  background-color: #e1baba;
-  border-radius: 999px;
 `;
 
 const RoomName = styled.h1`
@@ -175,6 +174,25 @@ const MissionOwner = styled.h2`
   strong {
     font-weight: 700;
   }
+`;
+
+const HistoryButton = styled.button`
+  width: 350px;
+  max-width: 100%;
+  height: 48px;
+
+  margin: 0 auto;
+
+  border: 1px solid #79CA74;
+  border-radius: 7px;
+
+  background-color: #ffffff;
+  color: #244f22;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
 `;
 
 const NotFoundMessage = styled.div`
