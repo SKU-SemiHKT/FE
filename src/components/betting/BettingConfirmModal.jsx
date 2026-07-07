@@ -48,7 +48,7 @@ const Overlay = styled.div`
   align-items: flex-end;
   justify-content: center;
 
-  background-color: rgba(225, 186, 186, 0.45);
+  background-color: rgba(161, 237, 157, 0.28);
 
   z-index: 3000;
 `;
@@ -79,7 +79,7 @@ const Message = styled.p`
 `;
 
 const PointText = styled.span`
-  color: #df969a;
+  color: #79CA74;
 `;
 
 const ConfirmButton = styled.button`
@@ -91,8 +91,8 @@ const ConfirmButton = styled.button`
   border: none;
   border-radius: 18px;
 
-  background-color: #df969a;
-  color: #ffffff;
+  background-color: #A1ED9D;
+  color: #244f22;
 
   font-size: 22px;
   font-weight: 700;

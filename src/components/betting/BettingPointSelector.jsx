@@ -91,7 +91,7 @@ const Container = styled.section`
   width: 350px;
   max-width: 100%;
 
-  margin: 0 auto;
+  margin: 0 auto; 
 `;
 
 const Title = styled.h2`
@@ -144,7 +144,7 @@ const CustomInput = styled.input`
 
   font-size: 14px;
   outline: none;
-
+ 
   &:focus {
     border-color: #b98487;
   }
@@ -158,10 +158,10 @@ const SelectedPointBox = styled.div`
 
   box-sizing: border-box;
 
-  border: 1px solid #dfa7aa;
+  border: 1px solid #79CA74;
   border-radius: 8px;
 
-  color: #dfa7aa;
+  color: #79CA74;
 
   text-align: center;
   font-size: 15px;

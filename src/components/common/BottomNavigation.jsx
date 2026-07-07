@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { MdHomeFilled } from "react-icons/md";
 import { RiCoinsFill } from "react-icons/ri";
 import { MdOutlineShoppingBag } from "react-icons/md";
@@ -70,7 +70,7 @@ const NavigationButton = styled.button`
     border-radius: 999px;
 
     background-color: ${({ $isActive }) =>
-        $isActive ? "#eee8e8" : "transparent"};
+        $isActive ? "#e9e9e9" : "transparent"};
 
     color: ${({ $isActive }) =>
         $isActive ? "#111111" : "#aaaaaa"};
