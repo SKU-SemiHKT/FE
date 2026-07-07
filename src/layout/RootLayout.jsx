@@ -24,4 +24,8 @@ const AppLayout = styled.div`
 
     position: relative;
     background-color: #ffffff;
+
+    .app-content {
+        padding-bottom: 90px;
+    }
 `;
